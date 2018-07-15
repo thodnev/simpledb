@@ -118,7 +118,7 @@ const char argp_version[] = ##VERSION;	//stringification
 
 /* A documentation string shown (only) in --help */
 static const char *const args_docstring = {
- "An example of simple fs-backed database made to demonstrate the common dev cycle"
+ "An example of simple fs-backed database made to demonstrate the common dev cycle "
  "and core concepts of applications development with C.\n\n"
  "Program uses a directory with files, each file contains one database entry. File"
  " names are used as keys for searching (filesystem is used as key->value storage "
@@ -272,6 +272,8 @@ int main(int argc, char *argv[]) {
 			char *fname = m_strjoin("/", args.dir, qval);
 			struct dbitem itm;
 			if ((lerr = item_read(fname, &itm)) != E_OK) {
+				item_remove_bykey(qval, args.dir);
+				printf("DB entry \"%s\" doesn't exist\n", qval);
 				free(fname);
 				err_exit(args.isquiet, lerr);
 			}
