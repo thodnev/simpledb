@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+
 enum main_err {
 	EM_OK=0,
 	/* all following codes start from last lib errcode */
@@ -106,9 +107,9 @@ static struct dbitem make_item(const char *str)
  * This could be done, for example, via Makefile
  * https://engineering.taboola.com/calculating-git-version/
  */
-#ifdef VERSION
-const char argp_version[] = ##VERSION;	//stringification
-#endif
+//#ifdef VERSION
+const char *argp_program_version = VERSION;	//stringification done outside
+//#endif
 
 
 /* An e-mail shown by default in --help for bug reports 		*/
@@ -190,7 +191,8 @@ static struct argp parser_config = {
 	.doc=args_docstring 
 };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	/* Fill with default arguments */
 	struct args_container args = {
 		.dir = ".",
@@ -247,7 +249,7 @@ int main(int argc, char *argv[]) {
 		int lerr = E_OK;
 		switch(qtype) {
 		case Q_HELP:
-			printf(qhelp_docstring);
+			printf("%s",qhelp_docstring);
 			exit(EM_OK);
 			/* break;  -- not needed because of exit*/ 
 		case Q_LIST:;	/* ; empty statement */

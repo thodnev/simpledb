@@ -10,6 +10,10 @@ STRIP=strip --strip-all
 DEPS:=$(addsuffix .o, $(DEPS))
 LIBFLAGS:=$(shell pkg-config --cflags --libs $(LIBS))	# be sure to see what it does
 
+GIT_HASH:=$(shell git --no-pager describe --tags --always)
+ifneq ($(GIT_HASH),)
+CFLAGS+=-DVERSION=\"$(GIT_HASH)\"
+endif
 
 .PHONY: all static deploy clean
 
@@ -23,7 +27,7 @@ all:	clean | $(TARGET)	## clean & build ordinary(dynamic) executable
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(LIBFLAGS) -c $<
-
+    
 $(TARGET): $(DEPS)		## build ordinary(dynamic) executable
 	$(CC) $(CFLAGS) $(DEPS) $(addsuffix .c, $(TARGET)) $(LIBFLAGS) -o $@
 
@@ -44,5 +48,5 @@ ifneq ($(PACKER), "")
 endif
 
 clean:				## tidy build directory
-	@echo Tidying things up...
+	@echo Tidying things up... 
 	-rm -f *.o $(TARGET)
